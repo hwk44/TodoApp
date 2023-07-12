@@ -34,7 +34,7 @@ public class TodoController {
     @PostMapping
     public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto){
         try {
-            String temp_UserId = "temp_User_Id";
+            String tempUserId = "temp_User_Id";
 
             // 1. TodoEntity로 변환
             TodoEntity entity = TodoDTO.toEntity(dto);
@@ -43,7 +43,7 @@ public class TodoController {
             entity.setId(null);
 
             // 3 임시 유저 아이디 설정.
-            entity.setUserId(temp_UserId);
+            entity.setUserId(tempUserId);
 
             // 4. 서비스 이용 Todo엔티티생성
             List<TodoEntity> entities = service.create(entity);
@@ -67,7 +67,7 @@ public class TodoController {
         String tempUserId = "temp_User_Id";
 
         // 1. 서비스 메서드의 retrieve 메서드 이용해 Todo리스트 가져온다
-        List<TodoEntity> entities = service.retrieve(tempUserId);
+        List<TodoEntity> entities = service.getTodos(tempUserId);
 
         // 2. 자바 스트림을 이용해 리턴된 엔티티 리스트를 TodoDTO 리스트로 변환
         List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
@@ -77,5 +77,51 @@ public class TodoController {
 
         // 7. ResponseDTO를 리턴
         return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
+        String tempUserId = "temp_User_Id";
+
+        // 1. dto -> entity
+        TodoEntity entity = TodoDTO.toEntity(dto);
+
+        // 2. id 초기화 (인증 인가 부분에서 수정 예정)
+        entity.setUserId(tempUserId);
+
+        // 3. updating entity
+        List<TodoEntity> entities = service.update(entity);
+
+        // 4. EntityList -> TodoDTOList
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        // 5. ResponseDTO 초기화
+        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        // 6. ResponseDTO 리턴
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto){
+        try{
+            String tempUserId = "temp_User_Id";
+
+            // 1. dto -> entity
+            TodoEntity entity = TodoDTO.toEntity(dto);
+
+            // 2. id 초기화 (인증 인가 부분에서 수정 예정)
+            entity.setUserId(tempUserId);
+
+            List<TodoEntity> entities = service.delete(entity);
+            List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+        }catch (Exception e){
+            String error = e.getMessage();
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
