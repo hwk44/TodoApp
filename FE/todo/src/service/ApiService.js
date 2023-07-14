@@ -18,4 +18,4 @@ export function call(api, method, request){
         console.log("http error");
         console.log(error);
     });
-}
+};

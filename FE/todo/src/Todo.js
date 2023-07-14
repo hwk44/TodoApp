@@ -20,22 +20,38 @@ const Todo = (props) => {
         setReadOnly(false);
     };
 
-    // turnOnReadOnly
+    // turnOnReadOnly local
+    // const turnOnReadOnly = (e) => {
+    //     if(e.key ==="Enter") setReadOnly(true);
+    // };
+
     const turnOnReadOnly = (e) => {
-        if(e.key ==="Enter") setReadOnly(true);
+        if(e.key ==="Enter" && readOnly === false){
+            setReadOnly(true);
+            editItem(item);
+        } 
     };
 
-    // editEventHandler
-    const editEventHandler =(e) => {
-        item.title = e.target.value;
-        editItem();
+    // editEventHandler local
+    // const editEventHandler =(e) => {
+    //     item.title = e.target.value;
+    //     editItem();
+    // };
+
+    const editEventHandler = (e) => {
+        setItem({...item, title: e.target.value});
     };
 
-    //
+    // checkboxEventHandler local
+    // const checkboxEventHandler = (e) => {
+    //     item.done = e.target.checked;
+    //     editItem();
+    // };
+
     const checkboxEventHandler = (e) => {
         item.done = e.target.checked;
-        editItem();
-    }
+        editItem(item);
+    };
 
     return (
         <ListItem>
