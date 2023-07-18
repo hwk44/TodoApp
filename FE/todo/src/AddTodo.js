@@ -12,20 +12,20 @@ const Addtodo = (props) => {
      const onButtonClick = () => {
         addItem(item);
         setItem({title : ""});
-    }
+    };
     // enterKeyEventHandler
     const enterKeyEventHandler = (e) => {
         if(e.key === "Enter") {
             console.log('You must have pressed Enter ')
             onButtonClick();
         }
-    }
+    };
 
     // onInputChange 함수
     const onInputChange = (e) => {
         setItem({title : e.target.value});
         // console.log(item);
-    }
+    };
     return(
         <Grid container style={{marginTop : 40}} >
             <Grid xs={11} md={11} item style={{paddingRight : 16}}>
@@ -42,5 +42,5 @@ const Addtodo = (props) => {
             </Grid>
         </Grid>
     );
-};
+}
 export default Addtodo;
