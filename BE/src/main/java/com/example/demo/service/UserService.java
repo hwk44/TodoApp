@@ -4,6 +4,7 @@ import com.example.demo.model.UserEntity;
 import com.example.demo.pesristense.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -27,7 +28,23 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    public UserEntity getByCredentials(final String username, final String password){
-        return userRepository.findByUsernameAndPassword(username,password);
+    // 암호화 x
+//    public UserEntity getByCredentials(final String username, final String password){
+//        return userRepository.findByUsernameAndPassword(username,password);
+//    }
+    
+    // 암호화
+    public UserEntity getByCredentials(final String username, final String password,
+                                       final PasswordEncoder encoder){
+
+
+        final UserEntity originalUser = userRepository.findByUsername(username);
+
+        // matches 메서드를 이용해 패스워드가 같은지 확인
+        if (originalUser != null &&
+                encoder.matches(password, originalUser.getPassword())) {
+            return originalUser;
+        }
+        return null;
     }
 }
